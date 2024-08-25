@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Selfie</title>
+</head>
+<body>
+    <video id="video" playsinline autoplay></video>
+    <button id="capture">Capture</button>
+    <script>
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture');
+        const userId = "{{ user_id }}";
+
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing media devices.', error);
+            });
+
+        captureButton.addEventListener('click', async () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgData = canvas.toDataURL```javascript
+            const imgData```javascript
+            const imgData = canvas.toDataURL('image/png');
+
+            try {
+                const response = await fetch(`/upload/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: imgData })
+                });
+
+                if (response.ok) {
+                    console.log('Image uploaded successfully');
+                } else {
+                    console.error('Failed to upload image');
+                }
+            } catch (error) {
+                console.error('Error uploading image.', error);
+            }
+        });
+    </script>
+</body>
+</html>
